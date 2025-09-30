@@ -6,11 +6,11 @@ terraform {
 }
 
 provider "google" {
-  project = var.project_id
-  region  = var.region
+  project = local.config.project_id
+  region  = local.config.region
 }
 
 provider "google-beta" {
-  project = var.project_id
-  region  = var.region
+  project = local.config.project_id
+  region  = local.config.region
 }
