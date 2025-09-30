@@ -26,17 +26,17 @@ This repository allows you to automatically set up Google Cloud resources using 
 - gcloud CLI installed
 
 ## Configuration
-- Set environment-specific values in the `terraform/environments/dev/terraform.tfvars` file.
+- Create a workspace configuration file (for example `terraform/workspace/workspaces/dev.tfvars.json`) for each environment.
 
 > [!WARNING]
-> **Security Alert: Handling `terraform.tfvars`**
-> The `terraform/environments/dev/terraform.tfvars` file in this repository is a **template only**. Populate it locally with your actual configuration (project ID, secrets, secure password).
+> **Security Alert: Handling workspace configuration files**
+> The `terraform/workspace/workspaces/dev.tfvars.json` file in this repository is a **template only**. Populate it locally with your actual configuration (project ID, secrets, secure password).
 >
-> **Do NOT commit `terraform.tfvars` containing sensitive data to Git.** This poses a significant security risk.
+> **Do NOT commit workspace configuration files containing sensitive data to Git.** This poses a significant security risk.
 >
-> Add `*.tfvars` to your `.gitignore` file immediately to prevent accidental commits. For secure secret management, use environment variables (`TF_VAR_...`) or tools like Google Secret Manager.
+> Add `*.tfvars` and `*.tfvars.json` to your `.gitignore` file immediately to prevent accidental commits. For secure secret management, use environment variables (`TF_VAR_...`) or tools like Google Secret Manager.
 
-- Create a GCS bucket to manage Terraform state in advance, and replace "your-tfstate-bucket" in the `terraform/environments/dev/provider.tf` file with the name of the created bucket.
+- Create a GCS bucket to manage Terraform state in advance, and replace "your-tfstate-bucket" in the `terraform/workspace/provider.tf` file with the name of the created bucket.
 
 ## Getting Started
 1. Clone the repository:
@@ -46,19 +46,27 @@ This repository allows you to automatically set up Google Cloud resources using 
 
 2. Initialize Terraform:
     ```sh
-    cd terraform/environments/dev
+    cd terraform/workspace
     terraform init
     ```
 
-3. Make Artifact Registry repository:
+3. Create (or select) a Terraform workspace for the environment you want to deploy. For example, to use a `dev` environment:
+    ```sh
+    terraform workspace new dev
+    # or select an existing workspace
+    terraform workspace select dev
+    ```
+
+4. Make Artifact Registry repository:
     ```sh
     terraform apply -target=module.registry
     ```
 
-4. Build & push container images:
+5. Build & push container images:
     ```sh
     cd ../../..
     sh ./docker/cloudbuild.sh <your-project-id> <your-region>
+    cd terraform/workspace
     ```
     You can also specify a version of the dify-api image.
     ```sh
@@ -66,13 +74,12 @@ This repository allows you to automatically set up Google Cloud resources using 
     ```
     If no version is specified, the latest version is used by default.
 
-5. Terraform plan:
+6. Terraform plan:
     ```sh
-    cd terraform/environments/dev
     terraform plan
     ```
 
-6. Terraform apply:
+7. Terraform apply:
     ```sh
     terraform apply
     ```

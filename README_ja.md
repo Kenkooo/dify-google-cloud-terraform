@@ -23,16 +23,16 @@
 - 必要なAPIの有効化 (Serverless VPC Access, Service Networking, etc.)
 
 ## 設定
-- `terraform/environments/dev/terraform.tfvars` ファイルで環境固有の値を設定します。
+- 環境ごとにワークスペース設定ファイル (例: `terraform/workspace/workspaces/dev.tfvars.json`) を作成してください。
 > [!WARNING]
-> **セキュリティ警告: `terraform.tfvars` の取り扱い**
-> リポジトリ内の `terraform/environments/dev/terraform.tfvars` は **テンプレート** です。実際の値 (プロジェクトID, 機密情報, 安全なパスワード) はローカルで設定してください。
+> **セキュリティ警告: ワークスペース設定ファイルの取り扱い**
+> リポジトリ内の `terraform/workspace/workspaces/dev.tfvars.json` は **テンプレート** です。実際の値 (プロジェクトID, 機密情報, 安全なパスワード) はローカルで設定してください。
 >
-> **❗️ 機密情報を含む `terraform.tfvars` を Git にコミットしないでください。** 重大なセキュリティリスクとなります。
+> **❗️ 機密情報を含むワークスペース設定ファイルを Git にコミットしないでください。** 重大なセキュリティリスクとなります。
 >
-> 誤コミット防止のため、すぐに `*.tfvars` を `.gitignore` に追加してください。安全な管理には環境変数 (`TF_VAR_...`) や Google Secret Manager 等の利用を推奨します。
+> 誤コミット防止のため、すぐに `*.tfvars` や `*.tfvars.json` を `.gitignore` に追加してください。安全な管理には環境変数 (`TF_VAR_...`) や Google Secret Manager 等の利用を推奨します。
 
-- terraform stateを管理する用のGCSバケットを事前に作成し、`terraform/environments/dev/provider.tf` ファイルの "your-tfstate-bucket" を作成したバケット名に書き換えます。
+- terraform stateを管理する用のGCSバケットを事前に作成し、`terraform/workspace/provider.tf` ファイルの "your-tfstate-bucket" を作成したバケット名に書き換えます。
 
 ## 始め方
 1. リポジトリをクローン:
@@ -42,19 +42,27 @@
 
 2. Terraformを初期化:
     ```sh
-    cd terraform/environments/dev
+    cd terraform/workspace
     terraform init
     ```
 
-3. Artifact Registry リポジトリを作成:
+3. デプロイする環境の Terraform ワークスペースを作成 (または選択):
+    ```sh
+    terraform workspace new dev
+    # 既存のワークスペースを利用する場合
+    terraform workspace select dev
+    ```
+
+4. Artifact Registry リポジトリを作成:
     ```sh
     terraform apply -target=module.registry
     ```
 
-4. コンテナイメージをビルド＆プッシュ:
+5. コンテナイメージをビルド＆プッシュ:
     ```sh
     cd ../../..
     sh ./docker/cloudbuild.sh <your-project-id> <your-region>
+    cd terraform/workspace
     ```
     また、dify-api イメージのバージョンを指定することもできます。
     ```sh
@@ -62,13 +70,12 @@
     ```
     バージョンを指定しない場合、デフォルトで最新バージョンが使用されます。
 
-5. Terraformをプランニング:
+6. Terraformをプランニング:
     ```sh
-    cd terraform/environments/dev
     terraform plan
     ```
 
-6. Terraformを適用:
+7. Terraformを適用:
     ```sh
     terraform apply
     ```
