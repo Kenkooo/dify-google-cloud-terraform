@@ -26,7 +26,7 @@ This repository allows you to automatically set up Google Cloud resources using 
 - gcloud CLI installed
 
 ## Configuration
-- Create a workspace configuration file (for example `terraform/workspace/workspaces/dev.tfvars.json`) for each environment.
+- Create a workspace configuration file for each environment (supported formats: `*.tfvars.json`, `*.tfvars.yaml`, or `*.tfvars.yml`). For example: `terraform/workspace/workspaces/dev.tfvars.json`.
 
 > [!WARNING]
 > **Security Alert: Handling workspace configuration files**
@@ -34,7 +34,7 @@ This repository allows you to automatically set up Google Cloud resources using 
 >
 > **Do NOT commit workspace configuration files containing sensitive data to Git.** This poses a significant security risk.
 >
-> Add `*.tfvars` and `*.tfvars.json` to your `.gitignore` file immediately to prevent accidental commits. For secure secret management, use environment variables (`TF_VAR_...`) or tools like Google Secret Manager.
+> Add `*.tfvars`, `*.tfvars.json`, `*.tfvars.yaml`, and `*.tfvars.yml` to your `.gitignore` file immediately to prevent accidental commits. For secure secret management, use environment variables (`TF_VAR_...`) or tools like Google Secret Manager.
 
 - Create a GCS bucket to manage Terraform state in advance, and replace "your-tfstate-bucket" in the `terraform/workspace/provider.tf` file with the name of the created bucket.
 

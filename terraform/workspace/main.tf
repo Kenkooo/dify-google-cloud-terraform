@@ -1,8 +1,24 @@
 locals {
-  workspace_name   = terraform.workspace
-  workspace_file   = "${path.module}/workspaces/${local.workspace_name}.tfvars.json"
-  workspace_exists = fileexists(local.workspace_file)
-  workspace_data   = local.workspace_exists ? jsondecode(file(local.workspace_file)) : {}
+  workspace_name = terraform.workspace
+
+  workspace_supported_files = [
+    for ext in ["tfvars.json", "tfvars.yaml", "tfvars.yml"] :
+    "workspaces/${local.workspace_name}.${ext}"
+  ]
+
+  workspace_file_candidates = flatten([
+    [
+      for rel_path in local.workspace_supported_files :
+      "${path.module}/${rel_path}"
+      if fileexists("${path.module}/${rel_path}")
+    ]
+  ])
+
+  workspace_file         = length(local.workspace_file_candidates) > 0 ? local.workspace_file_candidates[0] : null
+  workspace_exists       = local.workspace_file != null
+  workspace_file_ext     = local.workspace_exists ? lower(element(reverse(split(".", local.workspace_file)), 0)) : ""
+  workspace_data         = local.workspace_exists ? local.decode_workspace_file : {}
+  decode_workspace_file  = local.workspace_file_ext == "json" ? jsondecode(file(local.workspace_file)) : yamldecode(file(local.workspace_file))
 
   override_map = {
     project_id                              = var.project_id
@@ -112,7 +128,14 @@ locals {
 check "workspace_file_exists" {
   assert {
     condition     = local.workspace_exists
-    error_message = "Workspace configuration file not found for workspace '${local.workspace_name}'. Expected file: ${local.workspace_file}"
+    error_message = "Workspace configuration file not found for workspace '${local.workspace_name}'. Provide one of: ${join(", ", local.workspace_supported_files)}"
+  }
+}
+
+check "workspace_file_unique" {
+  assert {
+    condition     = length(local.workspace_file_candidates) <= 1
+    error_message = "Multiple workspace configuration files found for workspace '${local.workspace_name}'. Keep only one of: ${join(", ", local.workspace_supported_files)}"
   }
 }
 
