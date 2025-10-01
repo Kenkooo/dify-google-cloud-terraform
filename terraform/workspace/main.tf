@@ -124,7 +124,7 @@ check "workspace_required_values" {
 }
 
 module "cloudrun" {
-  source = "../../modules/cloudrun"
+  source = "../modules/cloudrun"
 
   project_id                  = local.config.project_id
   region                      = local.config.region
@@ -153,7 +153,7 @@ module "cloudrun" {
 }
 
 module "cloudsql" {
-  source = "../../modules/cloudsql"
+  source = "../modules/cloudsql"
 
   project_id          = local.config.project_id
   region              = local.config.region
@@ -167,7 +167,7 @@ module "cloudsql" {
 }
 
 module "redis" {
-  source = "../../modules/redis"
+  source = "../modules/redis"
 
   project_id = local.config.project_id
   region     = local.config.region
@@ -178,7 +178,7 @@ module "redis" {
 }
 
 module "network" {
-  source = "../../modules/network"
+  source = "../modules/network"
 
   project_id = local.config.project_id
   region     = local.config.region
@@ -187,7 +187,7 @@ module "network" {
 }
 
 module "storage" {
-  source = "../../modules/storage"
+  source = "../modules/storage"
 
   project_id                 = local.config.project_id
   region                     = local.config.region
@@ -197,7 +197,7 @@ module "storage" {
 }
 
 module "filestore" {
-  source = "../../modules/filestore"
+  source = "../modules/filestore"
 
   region = local.config.region
 
@@ -207,7 +207,7 @@ module "filestore" {
 }
 
 module "registry" {
-  source = "../../modules/registry"
+  source = "../modules/registry"
 
   project_id                  = local.config.project_id
   region                      = local.config.region
