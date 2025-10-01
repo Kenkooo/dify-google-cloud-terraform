@@ -37,7 +37,7 @@
 ## 始め方
 1. リポジトリをクローン:
     ```sh
-    git clone https://github.com/DeNA/dify-google-cloud-terraform.git
+    git clone https://github.com/Kenkooo/dify-google-cloud-terraform.git
     ```
 
 2. Terraformを初期化:

@@ -41,7 +41,7 @@ This repository allows you to automatically set up Google Cloud resources using 
 ## Getting Started
 1. Clone the repository:
     ```sh
-    git clone https://github.com/DeNA/dify-google-cloud-terraform.git
+    git clone https://github.com/Kenkooo/dify-google-cloud-terraform.git
     ```
 
 2. Initialize Terraform:
