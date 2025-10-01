@@ -26,11 +26,11 @@ This repository allows you to automatically set up Google Cloud resources using 
 - gcloud CLI installed
 
 ## Configuration
-- Create a workspace configuration file (for example `terraform/workspace/workspaces/dev.tfvars.json`) for each environment.
+- Create a workspace configuration file (for example `terraform/workspace/workspaces/dev.tfvars`) for each environment.
 
 > [!WARNING]
 > **Security Alert: Handling workspace configuration files**
-> The `terraform/workspace/workspaces/dev.tfvars.json` file in this repository is a **template only**. Populate it locally with your actual configuration (project ID, secrets, secure password).
+> The `terraform/workspace/workspaces/dev.tfvars` file in this repository is a **template only**. Populate it locally with your actual configuration (project ID, secrets, secure password).
 >
 > **Do NOT commit workspace configuration files containing sensitive data to Git.** This poses a significant security risk.
 >
