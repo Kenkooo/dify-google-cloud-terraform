@@ -3,6 +3,5 @@
 
 *.tfvars
 *.tfvars.json
-!terraform/workspace/workspaces/dev.tfvars
 
 .DS_Store
