@@ -23,14 +23,14 @@
 - 必要なAPIの有効化 (Serverless VPC Access, Service Networking, etc.)
 
 ## 設定
-- 環境ごとにワークスペース設定ファイル (例: `terraform/workspace/workspaces/dev.tfvars.json`) を作成してください。
+- 環境ごとにワークスペース設定ファイル（対応フォーマット: `*.tfvars.json`, `*.tfvars.yaml`, `*.tfvars.yml`。例: `terraform/workspace/workspaces/dev.tfvars.json`）を作成してください。
 > [!WARNING]
 > **セキュリティ警告: ワークスペース設定ファイルの取り扱い**
 > リポジトリ内の `terraform/workspace/workspaces/dev.tfvars.json` は **テンプレート** です。実際の値 (プロジェクトID, 機密情報, 安全なパスワード) はローカルで設定してください。
 >
 > **❗️ 機密情報を含むワークスペース設定ファイルを Git にコミットしないでください。** 重大なセキュリティリスクとなります。
 >
-> 誤コミット防止のため、すぐに `*.tfvars` や `*.tfvars.json` を `.gitignore` に追加してください。安全な管理には環境変数 (`TF_VAR_...`) や Google Secret Manager 等の利用を推奨します。
+> 誤コミット防止のため、すぐに `*.tfvars`、`*.tfvars.json`、`*.tfvars.yaml`、`*.tfvars.yml` を `.gitignore` に追加してください。安全な管理には環境変数 (`TF_VAR_...`) や Google Secret Manager 等の利用を推奨します。
 
 - terraform stateを管理する用のGCSバケットを事前に作成し、`terraform/workspace/provider.tf` ファイルの "your-tfstate-bucket" を作成したバケット名に書き換えます。
 
