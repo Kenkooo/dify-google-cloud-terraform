@@ -1,6 +1,14 @@
 locals {
   workspace_name = terraform.workspace
 
+  workspace_normalized = regexreplace(lower("ws-${local.workspace_name}"), "[^a-z0-9-]", "-")
+  workspace_compact    = regexreplace(local.workspace_normalized, "-{2,}", "-")
+  workspace_value      = trim(local.workspace_compact, "-") != "" ? trim(local.workspace_compact, "-") : "ws"
+  workspace_suffix     = substr(local.workspace_value, 0, min(63, length(local.workspace_value)))
+  workspace_labels = {
+    workspace = local.workspace_suffix
+  }
+
   workspace_supported_files = [
     for ext in ["tfvars.json", "tfvars.yaml", "tfvars.yml"] :
     "workspaces/${local.workspace_name}.${ext}"
@@ -151,6 +159,8 @@ module "cloudrun" {
 
   project_id                  = local.config.project_id
   region                      = local.config.region
+  workspace_suffix            = local.workspace_suffix
+  workspace_labels            = local.workspace_labels
   dify_version                = local.config.dify_version
   dify_sandbox_version        = local.config.dify_sandbox_version
   cloud_run_ingress           = local.config.cloud_run_ingress
@@ -180,6 +190,8 @@ module "cloudsql" {
 
   project_id          = local.config.project_id
   region              = local.config.region
+  workspace_suffix    = local.workspace_suffix
+  workspace_labels    = local.workspace_labels
   db_username         = local.config.db_username
   db_password         = local.config.db_password
   deletion_protection = local.config.db_deletion_protection
@@ -194,6 +206,8 @@ module "redis" {
 
   project_id = local.config.project_id
   region     = local.config.region
+  workspace_suffix = local.workspace_suffix
+  workspace_labels = local.workspace_labels
 
   vpc_network_name = module.network.vpc_network_name
 
@@ -205,6 +219,7 @@ module "network" {
 
   project_id = local.config.project_id
   region     = local.config.region
+  workspace_suffix = local.workspace_suffix
 
   depends_on = [google_project_service.enabled_services]
 }
@@ -214,6 +229,8 @@ module "storage" {
 
   project_id                 = local.config.project_id
   region                     = local.config.region
+  workspace_suffix           = local.workspace_suffix
+  workspace_labels           = local.workspace_labels
   google_storage_bucket_name = local.config.google_storage_bucket_name
 
   depends_on = [google_project_service.enabled_services]
@@ -222,7 +239,9 @@ module "storage" {
 module "filestore" {
   source = "../modules/filestore"
 
-  region = local.config.region
+  region           = local.config.region
+  workspace_suffix = local.workspace_suffix
+  workspace_labels = local.workspace_labels
 
   vpc_network_name = module.network.vpc_network_name
 
@@ -234,6 +253,7 @@ module "registry" {
 
   project_id                  = local.config.project_id
   region                      = local.config.region
+  workspace_labels            = local.workspace_labels
   nginx_repository_id         = local.config.nginx_repository_id
   web_repository_id           = local.config.web_repository_id
   api_repository_id           = local.config.api_repository_id

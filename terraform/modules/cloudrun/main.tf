@@ -1,6 +1,24 @@
+locals {
+  service_account_id = regexreplace(
+    substr("dify-${var.workspace_suffix}-sa", 0, min(30, length("dify-${var.workspace_suffix}-sa"))),
+    "-+$",
+    ""
+  )
+  dify_service_name = regexreplace(
+    substr("dify-${var.workspace_suffix}-service", 0, min(63, length("dify-${var.workspace_suffix}-service"))),
+    "-+$",
+    ""
+  )
+  dify_sandbox_name = regexreplace(
+    substr("dify-${var.workspace_suffix}-sandbox", 0, min(63, length("dify-${var.workspace_suffix}-sandbox"))),
+    "-+$",
+    ""
+  )
+}
+
 resource "google_service_account" "dify_service_account" {
-  account_id   = "dify-service-account"
-  display_name = "Dify Service Account"
+  account_id   = local.service_account_id
+  display_name = "Dify Service Account (${var.workspace_suffix})"
 }
 
 resource "google_project_iam_member" "dify_service_account_role" {
@@ -31,9 +49,10 @@ resource "google_cloud_run_service_iam_binding" "public_sanbox" {
 }
 
 resource "google_cloud_run_v2_service" "dify_service" {
-  name     = "dify-service"
+  name     = local.dify_service_name
   location = var.region
   ingress  = var.cloud_run_ingress
+  labels   = var.workspace_labels
   template {
     service_account       = google_service_account.dify_service_account.email
     execution_environment = "EXECUTION_ENVIRONMENT_GEN2"
@@ -391,8 +410,9 @@ resource "google_cloud_run_v2_service" "dify_service" {
 }
 
 resource "google_cloud_run_v2_service" "dify_sandbox" {
-  name     = "dify-sandbox"
+  name     = local.dify_sandbox_name
   location = var.region
+  labels   = var.workspace_labels
 
   template {
     containers {

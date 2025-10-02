@@ -1,18 +1,29 @@
+locals {
+  vpc_name        = regexreplace(substr("dify-${var.workspace_suffix}-vpc", 0, min(63, length("dify-${var.workspace_suffix}-vpc"))), "-+$", "")
+  subnet_name     = regexreplace(substr("dify-${var.workspace_suffix}-subnet", 0, min(63, length("dify-${var.workspace_suffix}-subnet"))), "-+$", "")
+  firewall_name   = regexreplace(substr("dify-${var.workspace_suffix}-allow-http-https", 0, min(63, length("dify-${var.workspace_suffix}-allow-http-https"))), "-+$", "")
+  router_name     = regexreplace(substr("dify-${var.workspace_suffix}-nat-router", 0, min(63, length("dify-${var.workspace_suffix}-nat-router"))), "-+$", "")
+  router_nat_name = regexreplace(substr("dify-${var.workspace_suffix}-nat", 0, min(63, length("dify-${var.workspace_suffix}-nat"))), "-+$", "")
+}
+
 resource "google_compute_network" "dify_vpc" {
-  name                    = "dify-vpc"
+  name                    = local.vpc_name
+  project                 = var.project_id
   auto_create_subnetworks = false
+  description             = "Dify network for workspace ${var.workspace_suffix}"
 }
 
 resource "google_compute_subnetwork" "dify_subnet" {
-  name          = "dify-subnet"
+  name          = local.subnet_name
   ip_cidr_range = "10.0.0.0/24"
   region        = var.region
   network       = google_compute_network.dify_vpc.id
 }
 
 resource "google_compute_firewall" "allow_http_https" {
-  name    = "allow-http-https"
+  name    = local.firewall_name
   network = google_compute_network.dify_vpc.name
+  project = var.project_id
 
   allow {
     protocol = "tcp"
@@ -24,17 +35,17 @@ resource "google_compute_firewall" "allow_http_https" {
 
   destination_ranges = ["0.0.0.0/0"]
 
-  target_tags = ["allow-http-https"]
+  target_tags = [local.firewall_name]
 }
 
 resource "google_compute_router" "router" {
-  name    = "nat-router"
+  name    = local.router_name
   network = google_compute_network.dify_vpc.name
   region  = var.region
 }
 
 resource "google_compute_router_nat" "nat" {
-  name   = "nat-config"
+  name   = local.router_nat_name
   router = google_compute_router.router.name
   region = var.region
 

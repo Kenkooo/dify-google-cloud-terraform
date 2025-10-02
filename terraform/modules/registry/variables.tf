@@ -6,6 +6,10 @@ variable "region" {
   type = string
 }
 
+variable "workspace_labels" {
+  type = map(string)
+}
+
 variable "nginx_repository_id" {
   type = string
 }

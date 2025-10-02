@@ -1,3 +1,16 @@
+locals {
+  private_ip_range_name = regexreplace(
+    substr("dify-${var.workspace_suffix}-private-ip-range", 0, min(63, length("dify-${var.workspace_suffix}-private-ip-range"))),
+    "-+$",
+    ""
+  )
+  sql_instance_name = regexreplace(
+    substr("dify-${var.workspace_suffix}-postgres", 0, min(98, length("dify-${var.workspace_suffix}-postgres"))),
+    "-+$",
+    ""
+  )
+}
+
 resource "google_service_networking_connection" "private_vpc_connection" {
   provider                = google-beta
   network                 = var.vpc_network_name
@@ -7,7 +20,7 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 
 resource "google_compute_global_address" "private_ip_range" {
   provider      = google-beta
-  name          = "private-ip-range"
+  name          = local.private_ip_range_name
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16
@@ -18,7 +31,7 @@ resource "google_compute_global_address" "private_ip_range" {
 resource "google_sql_database_instance" "postgres_instance" {
   depends_on          = [google_service_networking_connection.private_vpc_connection]
   database_version    = "POSTGRES_15"
-  name                = "postgres-instance"
+  name                = local.sql_instance_name
   project             = var.project_id
   region              = var.region
   deletion_protection = var.deletion_protection
@@ -61,6 +74,7 @@ resource "google_sql_database_instance" "postgres_instance" {
 
     pricing_plan = "PER_USE"
     tier         = "db-custom-2-8192"
+    user_labels  = var.workspace_labels
   }
 }
 
