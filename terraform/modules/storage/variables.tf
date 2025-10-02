@@ -9,3 +9,11 @@ variable "region" {
 variable "google_storage_bucket_name" {
   type = string
 }
+
+variable "workspace_suffix" {
+  type = string
+}
+
+variable "workspace_labels" {
+  type = map(string)
+}

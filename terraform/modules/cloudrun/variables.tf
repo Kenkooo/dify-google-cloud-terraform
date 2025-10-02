@@ -6,6 +6,14 @@ variable "region" {
   type = string
 }
 
+variable "workspace_suffix" {
+  type = string
+}
+
+variable "workspace_labels" {
+  type = map(string)
+}
+
 variable "dify_version" {
   type = string
 }

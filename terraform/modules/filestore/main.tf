@@ -1,5 +1,13 @@
+locals {
+  filestore_name = regexreplace(
+    substr("dify-${var.workspace_suffix}-filestore", 0, min(63, length("dify-${var.workspace_suffix}-filestore"))),
+    "-+$",
+    ""
+  )
+}
+
 resource "google_filestore_instance" "default" {
-  name     = "dify-filestore"
+  name     = local.filestore_name
   location = "${var.region}-b"
   tier     = "BASIC_HDD"
 
@@ -12,4 +20,6 @@ resource "google_filestore_instance" "default" {
     network = var.vpc_network_name
     modes   = ["MODE_IPV4"]
   }
+
+  labels = var.workspace_labels
 }
