@@ -19,7 +19,7 @@ locals {
   ]
   bucket_compact = join("", local.bucket_compact_chars)
   bucket_trimmed = trim(local.bucket_compact, "-")
-  bucket_value   = bucket_trimmed != "" ? bucket_trimmed : lower("${var.project_id}-${var.workspace_suffix}")
+  bucket_value   = local.bucket_trimmed != "" ? local.bucket_trimmed : lower("${var.project_id}-${var.workspace_suffix}")
   bucket_name = trim(
     substr(local.bucket_value, 0, min(63, length(local.bucket_value))),
     "-"
