@@ -1,8 +1,7 @@
 locals {
-  redis_instance_name = regexreplace(
+  redis_instance_name = trim(
     substr("dify-${var.workspace_suffix}-redis", 0, min(63, length("dify-${var.workspace_suffix}-redis"))),
-    "-+$",
-    ""
+    "-"
   )
 }
 
