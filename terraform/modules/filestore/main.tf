@@ -1,8 +1,7 @@
 locals {
-  filestore_name = regexreplace(
+  filestore_name = trim(
     substr("dify-${var.workspace_suffix}-filestore", 0, min(63, length("dify-${var.workspace_suffix}-filestore"))),
-    "-+$",
-    ""
+    "-"
   )
 }
 

@@ -1,13 +1,11 @@
 locals {
-  private_ip_range_name = regexreplace(
+  private_ip_range_name = trim(
     substr("dify-${var.workspace_suffix}-private-ip-range", 0, min(63, length("dify-${var.workspace_suffix}-private-ip-range"))),
-    "-+$",
-    ""
+    "-"
   )
-  sql_instance_name = regexreplace(
+  sql_instance_name = trim(
     substr("dify-${var.workspace_suffix}-postgres", 0, min(98, length("dify-${var.workspace_suffix}-postgres"))),
-    "-+$",
-    ""
+    "-"
   )
 }
 

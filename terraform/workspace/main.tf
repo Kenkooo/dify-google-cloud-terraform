@@ -1,10 +1,28 @@
 locals {
   workspace_name = terraform.workspace
 
-  workspace_normalized = regexreplace(lower("ws-${local.workspace_name}"), "[^a-z0-9-]", "-")
-  workspace_compact    = regexreplace(local.workspace_normalized, "-{2,}", "-")
-  workspace_value      = trim(local.workspace_compact, "-") != "" ? trim(local.workspace_compact, "-") : "ws"
-  workspace_suffix     = substr(local.workspace_value, 0, min(63, length(local.workspace_value)))
+  normalization_allowed_chars = toset(concat(
+    split(",", "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"),
+    split(",", "0,1,2,3,4,5,6,7,8,9"),
+    ["-"]
+  ))
+
+  workspace_base     = lower("ws-${local.workspace_name}")
+  workspace_replaced = replace(local.workspace_base, "_", "-")
+  workspace_chars = [
+    for idx in range(length(local.workspace_replaced)) : substr(local.workspace_replaced, idx, 1)
+  ]
+  workspace_normalized_chars = [
+    for ch in local.workspace_chars : contains(local.normalization_allowed_chars, ch) ? ch : "-"
+  ]
+  workspace_compact_chars = [
+    for idx, ch in local.workspace_normalized_chars :
+    idx == 0 ? ch : (ch == "-" && local.workspace_normalized_chars[idx - 1] == "-" ? "" : ch)
+  ]
+  workspace_compact = join("", local.workspace_compact_chars)
+  workspace_trimmed = trim(local.workspace_compact, "-")
+  workspace_value   = workspace_trimmed != "" ? workspace_trimmed : "ws"
+  workspace_suffix  = substr(local.workspace_value, 0, min(63, length(local.workspace_value)))
   workspace_labels = {
     workspace = local.workspace_suffix
   }

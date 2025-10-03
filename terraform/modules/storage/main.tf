@@ -1,17 +1,32 @@
 locals {
-  bucket_base      = lower("${var.project_id}-${var.google_storage_bucket_name}-${var.workspace_suffix}")
-  bucket_sanitized = regexreplace(local.bucket_base, "[^a-z0-9-]", "-")
-  bucket_compact   = regexreplace(local.bucket_sanitized, "-{2,}", "-")
-  bucket_value     = trim(local.bucket_compact, "-") != "" ? trim(local.bucket_compact, "-") : lower("${var.project_id}-${var.workspace_suffix}")
-  bucket_name      = regexreplace(
+  normalization_allowed_chars = toset(concat(
+    split(",", "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"),
+    split(",", "0,1,2,3,4,5,6,7,8,9"),
+    ["-"]
+  ))
+
+  bucket_base     = lower("${var.project_id}-${var.google_storage_bucket_name}-${var.workspace_suffix}")
+  bucket_replaced = replace(local.bucket_base, "_", "-")
+  bucket_chars = [
+    for idx in range(length(local.bucket_replaced)) : substr(local.bucket_replaced, idx, 1)
+  ]
+  bucket_normalized_chars = [
+    for ch in local.bucket_chars : contains(local.normalization_allowed_chars, ch) ? ch : "-"
+  ]
+  bucket_compact_chars = [
+    for idx, ch in local.bucket_normalized_chars :
+    idx == 0 ? ch : (ch == "-" && local.bucket_normalized_chars[idx - 1] == "-" ? "" : ch)
+  ]
+  bucket_compact = join("", local.bucket_compact_chars)
+  bucket_trimmed = trim(local.bucket_compact, "-")
+  bucket_value   = bucket_trimmed != "" ? bucket_trimmed : lower("${var.project_id}-${var.workspace_suffix}")
+  bucket_name = trim(
     substr(local.bucket_value, 0, min(63, length(local.bucket_value))),
-    "-+$",
-    ""
+    "-"
   )
-  service_account_id = regexreplace(
+  service_account_id = trim(
     substr("dify-${var.workspace_suffix}-storage-sa", 0, min(30, length("dify-${var.workspace_suffix}-storage-sa"))),
-    "-+$",
-    ""
+    "-"
   )
 }
 

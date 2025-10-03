@@ -1,9 +1,24 @@
 locals {
-  vpc_name        = regexreplace(substr("dify-${var.workspace_suffix}-vpc", 0, min(63, length("dify-${var.workspace_suffix}-vpc"))), "-+$", "")
-  subnet_name     = regexreplace(substr("dify-${var.workspace_suffix}-subnet", 0, min(63, length("dify-${var.workspace_suffix}-subnet"))), "-+$", "")
-  firewall_name   = regexreplace(substr("dify-${var.workspace_suffix}-allow-http-https", 0, min(63, length("dify-${var.workspace_suffix}-allow-http-https"))), "-+$", "")
-  router_name     = regexreplace(substr("dify-${var.workspace_suffix}-nat-router", 0, min(63, length("dify-${var.workspace_suffix}-nat-router"))), "-+$", "")
-  router_nat_name = regexreplace(substr("dify-${var.workspace_suffix}-nat", 0, min(63, length("dify-${var.workspace_suffix}-nat"))), "-+$", "")
+  vpc_name = trim(
+    substr("dify-${var.workspace_suffix}-vpc", 0, min(63, length("dify-${var.workspace_suffix}-vpc"))),
+    "-"
+  )
+  subnet_name = trim(
+    substr("dify-${var.workspace_suffix}-subnet", 0, min(63, length("dify-${var.workspace_suffix}-subnet"))),
+    "-"
+  )
+  firewall_name = trim(
+    substr("dify-${var.workspace_suffix}-allow-http-https", 0, min(63, length("dify-${var.workspace_suffix}-allow-http-https"))),
+    "-"
+  )
+  router_name = trim(
+    substr("dify-${var.workspace_suffix}-nat-router", 0, min(63, length("dify-${var.workspace_suffix}-nat-router"))),
+    "-"
+  )
+  router_nat_name = trim(
+    substr("dify-${var.workspace_suffix}-nat", 0, min(63, length("dify-${var.workspace_suffix}-nat"))),
+    "-"
+  )
 }
 
 resource "google_compute_network" "dify_vpc" {

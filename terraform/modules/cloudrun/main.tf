@@ -1,18 +1,15 @@
 locals {
-  service_account_id = regexreplace(
+  service_account_id = trim(
     substr("dify-${var.workspace_suffix}-sa", 0, min(30, length("dify-${var.workspace_suffix}-sa"))),
-    "-+$",
-    ""
+    "-"
   )
-  dify_service_name = regexreplace(
+  dify_service_name = trim(
     substr("dify-${var.workspace_suffix}-service", 0, min(63, length("dify-${var.workspace_suffix}-service"))),
-    "-+$",
-    ""
+    "-"
   )
-  dify_sandbox_name = regexreplace(
+  dify_sandbox_name = trim(
     substr("dify-${var.workspace_suffix}-sandbox", 0, min(63, length("dify-${var.workspace_suffix}-sandbox"))),
-    "-+$",
-    ""
+    "-"
   )
 }
 
