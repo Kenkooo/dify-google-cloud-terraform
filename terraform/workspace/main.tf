@@ -21,7 +21,7 @@ locals {
   ]
   workspace_compact = join("", local.workspace_compact_chars)
   workspace_trimmed = trim(local.workspace_compact, "-")
-  workspace_value   = workspace_trimmed != "" ? workspace_trimmed : "ws"
+  workspace_value   = local.workspace_trimmed != "" ? local.workspace_trimmed : "ws"
   workspace_suffix  = substr(local.workspace_value, 0, min(63, length(local.workspace_value)))
   workspace_labels = {
     workspace = local.workspace_suffix
