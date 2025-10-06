@@ -37,13 +37,7 @@ resource "google_artifact_registry_repository" "sandbox_repo" {
   location      = var.region
   repository_id = var.sandbox_repository_id
   format        = "DOCKER"
-  mode          = "REMOTE_REPOSITORY"
   labels        = var.workspace_labels
-  remote_repository_config {
-    docker_repository {
-      public_repository = "DOCKER_HUB"
-    }
-  }
 }
 
 resource "google_artifact_registry_repository" "plugin_daemon_repo" {
