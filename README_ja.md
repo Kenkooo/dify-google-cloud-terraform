@@ -60,7 +60,7 @@
 
 5. コンテナイメージをビルド＆プッシュ:
     ```sh
-    cd ../../..
+    cd ../..
     sh ./docker/cloudbuild.sh <your-project-id> <your-region>
     cd terraform/workspace
     ```
