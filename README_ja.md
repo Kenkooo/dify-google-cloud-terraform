@@ -70,6 +70,17 @@
     ```
     バージョンを指定しない場合、デフォルトで最新バージョンが使用されます。
 
+## コンテナイメージと Artifact Registry の構成
+
+- `docker/api` と `docker/nginx` には、公式 Dify イメージに対して本リポジトリ独自の調整を加えるための Dockerfile が含まれてい
+  ます。`docker/sandbox` は `langgenius/dify-sandbox` イメージを Terraform 実行前に自分の Artifact Registry へミラーするために追
+  加しました。
+- `terraform apply -target=module.registry` を実行すると、Cloud Build からプッシュされる nginx / api / sandbox 用の **通常の**
+  Artifact Registry リポジトリが 3 つ作成されます。
+- 同じモジュールは `dify-web` と `dify-plugin-daemon` 向けに **リモートリポジトリ** も作成します。これらは Docker Hub 上の公式
+  イメージを透過的にプロキシするため、`docker/` 配下に専用ディレクトリはありません。Cloud Run は Artifact Registry 経由で公
+  式イメージを取得するため、ローカルで Dockerfile を管理する必要はありません。
+
 6. Terraformをプランニング:
     ```sh
     terraform plan

@@ -74,6 +74,17 @@ This repository allows you to automatically set up Google Cloud resources using 
     ```
     If no version is specified, the latest version is used by default.
 
+## Container images and Artifact Registry layout
+
+- `docker/api` and `docker/nginx` contain the Dockerfiles that customise the upstream Dify images. The `docker/sandbox` folder was
+  added so you can mirror the optional `langgenius/dify-sandbox` image into your own Artifact Registry project before running
+  Terraform.
+- `terraform apply -target=module.registry` creates three **standard** Artifact Registry repositories (nginx, api, sandbox) where
+  Cloud Build pushes the images built by `docker/cloudbuild.sh`.
+- The same module also creates **remote repositories** for `dify-web` and `dify-plugin-daemon`. These repositories transparently
+  proxy the official images on Docker Hub, so there is no dedicated folder under `docker/`. When Cloud Run is deployed, it pulls
+  the upstream images via Artifact Registry without you having to maintain a local Dockerfile for them.
+
 6. Terraform plan:
     ```sh
     terraform plan
