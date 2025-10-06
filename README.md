@@ -64,7 +64,7 @@ This repository allows you to automatically set up Google Cloud resources using 
 
 5. Build & push container images:
     ```sh
-    cd ../../..
+    cd ../..
     sh ./docker/cloudbuild.sh <your-project-id> <your-region>
     cd terraform/workspace
     ```
