@@ -48,6 +48,7 @@ resource "google_cloud_run_service_iam_binding" "public_sanbox" {
 resource "google_cloud_run_v2_service" "dify_service" {
   name     = local.dify_service_name
   location = var.region
+  deletion_protection = var.deletion_protection
   ingress  = var.cloud_run_ingress
   labels   = var.workspace_labels
   template {
@@ -409,6 +410,7 @@ resource "google_cloud_run_v2_service" "dify_service" {
 resource "google_cloud_run_v2_service" "dify_sandbox" {
   name     = local.dify_sandbox_name
   location = var.region
+  deletion_protection = var.deletion_protection
   labels   = var.workspace_labels
 
   template {
