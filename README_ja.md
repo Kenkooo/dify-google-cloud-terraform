@@ -60,13 +60,13 @@
 
 5. コンテナイメージをビルド＆プッシュ:
     ```sh
-    cd ../../..
+    cd ../..
     sh ./docker/cloudbuild.sh <your-project-id> <your-region>
     cd terraform/workspace
     ```
-    また、dify-api と dify-sandbox イメージのバージョンを指定することもできます。
+    また、dify-api と dify-sandbox イメージに共通のバージョンを指定することもできます。
     ```sh
-    sh ./docker/cloudbuild.sh <your-project-id> <your-region> <dify-api-version> <dify-sandbox-version>
+    sh ./docker/cloudbuild.sh <your-project-id> <your-region> <dify-version>
     ```
     バージョンを指定しない場合、デフォルトで最新バージョンが使用されます。
 

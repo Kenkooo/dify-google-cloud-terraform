@@ -64,13 +64,13 @@ This repository allows you to automatically set up Google Cloud resources using 
 
 5. Build & push container images:
     ```sh
-    cd ../../..
+    cd ../..
     sh ./docker/cloudbuild.sh <your-project-id> <your-region>
     cd terraform/workspace
     ```
-    You can also specify a version of the dify-api and dify-sandbox images.
+    You can also specify a version shared by the dify-api and dify-sandbox images.
     ```sh
-    sh ./docker/cloudbuild.sh <your-project-id> <your-region> <dify-api-version> <dify-sandbox-version>
+    sh ./docker/cloudbuild.sh <your-project-id> <your-region> <dify-version>
     ```
     If no version is specified, the latest version is used by default.
 
