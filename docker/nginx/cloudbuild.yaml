@@ -1,9 +1,9 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-nginx-repo/dify-nginx:latest', '.']
+    args: ['build', '-t', '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-nginx/dify-nginx:latest', '.']
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-nginx-repo/dify-nginx:latest']
+    args: ['push', '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-nginx/dify-nginx:latest']
 
 images:
-  - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-nginx-repo/dify-nginx:latest'
+  - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-nginx/dify-nginx:latest'
