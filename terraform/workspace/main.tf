@@ -200,7 +200,10 @@ module "cloudrun" {
   min_instance_count          = local.config.min_instance_count
   max_instance_count          = local.config.max_instance_count
 
-  depends_on = [google_project_service.enabled_services]
+  depends_on = [
+    google_project_service.enabled_services,
+    module.registry,
+  ]
 }
 
 module "cloudsql" {
