@@ -287,6 +287,7 @@ locals {
     "compute.googleapis.com",
     "servicenetworking.googleapis.com",
     "redis.googleapis.com",
+    "file.googleapis.com",
     "vpcaccess.googleapis.com",
     "run.googleapis.com",
     "storage.googleapis.com",
