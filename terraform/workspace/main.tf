@@ -69,6 +69,7 @@ locals {
     vector_store                            = var.vector_store
     indexing_max_segmentation_tokens_length = var.indexing_max_segmentation_tokens_length
     cloud_run_ingress                       = var.cloud_run_ingress
+    cloud_run_deletion_protection           = var.cloud_run_deletion_protection
     plugin_daemon_key                       = var.plugin_daemon_key
     plugin_dify_inner_api_key               = var.plugin_dify_inner_api_key
     min_instance_count                      = var.min_instance_count
@@ -182,6 +183,7 @@ module "cloudrun" {
   dify_version                = local.config.dify_version
   dify_sandbox_version        = local.config.dify_sandbox_version
   cloud_run_ingress           = local.config.cloud_run_ingress
+  deletion_protection         = try(local.config.cloud_run_deletion_protection, false)
   nginx_repository_id         = local.config.nginx_repository_id
   web_repository_id           = local.config.web_repository_id
   api_repository_id           = local.config.api_repository_id

@@ -23,6 +23,11 @@ variable "cloud_run_ingress" {
   default = null
 }
 
+variable "cloud_run_deletion_protection" {
+  type    = bool
+  default = null
+}
+
 variable "nginx_repository_id" {
   type    = string
   default = null

@@ -93,3 +93,9 @@ variable "min_instance_count" {
 variable "max_instance_count" {
   type = number
 }
+
+variable "deletion_protection" {
+  description = "Whether to enable deletion protection on Cloud Run services."
+  type        = bool
+  default     = false
+}
