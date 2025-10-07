@@ -68,11 +68,15 @@ This repository allows you to automatically set up Google Cloud resources using 
     bash ./docker/cloudbuild.sh <your-project-id> <your-region>
     cd terraform/workspace
     ```
-    You can also specify a version shared by the dify-api and dify-sandbox images.
+    You can also specify a version shared by all Dify images (API, Sandbox, Web, and Plugin Daemon).
     ```sh
     bash ./docker/cloudbuild.sh <your-project-id> <your-region> <dify-version>
     ```
-    If no version is specified, the latest version is used by default. Ensure that the `dify_version` and `dify_sandbox_version` values in your workspace configuration match the tag you build (or are also set to `latest`). Terraform will deploy the exact tag specified there.
+    If no version is specified, the latest version is used by default. Terraform automatically fills in `dify_version = "latest"` for you, so leaving the field out of your workspace configuration simply mirrors that behavior. When you build with a specific tag, set both `dify_version` and `dify_sandbox_version` to the same value so Terraform deploys the matching images (the Plugin Daemon reuses `dify_version`).
+
+    > **Heads-up:** the upstream `langgenius/dify-plugin-daemon` repository sometimes skips specific tags.
+    > When the requested tag is missing, the Cloud Build for the Plugin Daemon automatically falls back to mirroring the upstream `latest` image while still pushing it to Artifact Registry with your requested tag.
+    > This allows Terraform to keep using a single `dify_version` value without blocking the deployment, but keep in mind that the Plugin Daemon bits may be newer than the rest of the stack in that situation.
 
 6. Terraform plan:
     ```sh

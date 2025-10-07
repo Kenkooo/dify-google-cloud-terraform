@@ -50,7 +50,6 @@ locals {
     project_id                              = var.project_id
     region                                  = var.region
     dify_version                            = var.dify_version
-    dify_plugin_daemon_version              = var.dify_plugin_daemon_version
     dify_sandbox_version                    = var.dify_sandbox_version
     nginx_repository_id                     = var.nginx_repository_id
     web_repository_id                       = var.web_repository_id
@@ -85,7 +84,6 @@ locals {
     "project_id",
     "region",
     "dify_version",
-    "dify_plugin_daemon_version",
     "dify_sandbox_version",
     "nginx_repository_id",
     "web_repository_id",
@@ -193,7 +191,6 @@ module "cloudrun" {
   plugin_daemon_repository_id = local.config.plugin_daemon_repository_id
   plugin_daemon_key           = local.config.plugin_daemon_key
   plugin_dify_inner_api_key   = local.config.plugin_dify_inner_api_key
-  dify_plugin_daemon_version  = local.config.dify_plugin_daemon_version
   db_database                 = local.config.db_database
   db_database_plugin          = local.config.db_database_plugin
   filestore_ip_address        = module.filestore.filestore_ip_address
