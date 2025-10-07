@@ -1,0 +1,17 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-plugin-daemon/dify-plugin-daemon:${_DIFY_PLUGIN_DAEMON_VERSION}'
+      - '--build-arg'
+      - 'DIFY_PLUGIN_DAEMON_VERSION=${_DIFY_PLUGIN_DAEMON_VERSION}'
+      - '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-plugin-daemon/dify-plugin-daemon:${_DIFY_PLUGIN_DAEMON_VERSION}'
+
+images:
+  - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-plugin-daemon/dify-plugin-daemon:${_DIFY_PLUGIN_DAEMON_VERSION}'
