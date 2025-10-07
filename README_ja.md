@@ -64,11 +64,15 @@
     bash ./docker/cloudbuild.sh <your-project-id> <your-region>
     cd terraform/workspace
     ```
-    また、dify-api と dify-sandbox イメージに共通のバージョンを指定することもできます。
+    また、API / Sandbox / Web / Plugin Daemon すべてに共通のバージョンを指定することもできます。
     ```sh
     bash ./docker/cloudbuild.sh <your-project-id> <your-region> <dify-version>
     ```
-    バージョンを指定しない場合、デフォルトで最新バージョンが使用されます。Terraform はワークスペース構成に記載した `dify_version` と `dify_sandbox_version` のタグをそのまま利用するため、ビルドしたタグと同じ値（または `latest`）を設定してください。
+    バージョンを指定しない場合、デフォルトで最新バージョンが使用されます。Terraform が `dify_version = "latest"` を自動的に補完するため、ワークスペース構成でフィールドを省略しても同じ挙動になります。特定のタグでビルドした場合は `dify_version` と `dify_sandbox_version` の双方にその値を設定してください（Plugin Daemon には `dify_version` が適用されます）。
+
+    > **注意:** 上流の `langgenius/dify-plugin-daemon` リポジトリでは、一部のバージョンが公開されないことがあります。
+    > 指定したタグが存在しない場合でも、Plugin Daemon の Cloud Build は自動的に upstream の `latest` イメージへフォールバックしつつ、指定したタグ名で Artifact Registry にプッシュします。
+    > そのため Terraform の `dify_version` を統一したままデプロイできますが、その場合 Plugin Daemon だけがスタックより新しい内容になる可能性がある点に留意してください。
 
 6. Terraformをプランニング:
     ```sh
