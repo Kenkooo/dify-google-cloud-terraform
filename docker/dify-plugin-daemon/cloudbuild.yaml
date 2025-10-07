@@ -7,14 +7,14 @@ steps:
         set -euo pipefail
 
         TARGET_TAG="${_DIFY_VERSION}"
-        if ! docker manifest inspect "langgenius/dify-plugin-daemon:${TARGET_TAG}" >/dev/null 2>&1; then
-          echo "langgenius/dify-plugin-daemon:${TARGET_TAG} not found; falling back to 'latest'." >&2
+        if ! docker manifest inspect "langgenius/dify-plugin-daemon:$${TARGET_TAG}" >/dev/null 2>&1; then
+          echo "langgenius/dify-plugin-daemon:$${TARGET_TAG} not found; falling back to 'latest'." >&2
           TARGET_TAG="latest"
         fi
 
         docker build \
           -t "${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-plugin-daemon/dify-plugin-daemon:${_DIFY_VERSION}" \
-          --build-arg "DIFY_VERSION=${TARGET_TAG}" \
+          --build-arg "DIFY_VERSION=$${TARGET_TAG}" \
           .
 
         docker push "${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-plugin-daemon/dify-plugin-daemon:${_DIFY_VERSION}"
