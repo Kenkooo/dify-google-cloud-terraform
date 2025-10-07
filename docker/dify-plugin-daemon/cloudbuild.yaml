@@ -1,17 +1,23 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
     args:
-      - 'build'
-      - '-t'
-      - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-plugin-daemon/dify-plugin-daemon:${_DIFY_PLUGIN_DAEMON_VERSION}'
-      - '--build-arg'
-      - 'DIFY_PLUGIN_DAEMON_VERSION=${_DIFY_PLUGIN_DAEMON_VERSION}'
-      - '.'
+      - '-c'
+      - |
+        set -euo pipefail
 
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'push'
-      - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-plugin-daemon/dify-plugin-daemon:${_DIFY_PLUGIN_DAEMON_VERSION}'
+        TARGET_TAG="${_DIFY_VERSION}"
+        if ! docker manifest inspect "langgenius/dify-plugin-daemon:${TARGET_TAG}" >/dev/null 2>&1; then
+          echo "langgenius/dify-plugin-daemon:${TARGET_TAG} not found; falling back to 'latest'." >&2
+          TARGET_TAG="latest"
+        fi
+
+        docker build \
+          -t "${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-plugin-daemon/dify-plugin-daemon:${_DIFY_VERSION}" \
+          --build-arg "DIFY_VERSION=${TARGET_TAG}" \
+          .
+
+        docker push "${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-plugin-daemon/dify-plugin-daemon:${_DIFY_VERSION}"
 
 images:
-  - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-plugin-daemon/dify-plugin-daemon:${_DIFY_PLUGIN_DAEMON_VERSION}'
+  - '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/dify-plugin-daemon/dify-plugin-daemon:${_DIFY_VERSION}'

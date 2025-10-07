@@ -231,7 +231,7 @@ resource "google_cloud_run_v2_service" "dify_service" {
     }
     containers {
       name  = "dify-plugin-daemon"
-      image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.plugin_daemon_repository_id}/dify-plugin-daemon:${var.dify_plugin_daemon_version}"
+      image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.plugin_daemon_repository_id}/dify-plugin-daemon:${var.dify_version}"
       resources {
         limits = {
           cpu    = "1"

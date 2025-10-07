@@ -10,7 +10,7 @@ variable "region" {
 
 variable "dify_version" {
   type    = string
-  default = null
+  default = "latest"
 }
 
 variable "dify_sandbox_version" {
@@ -114,11 +114,6 @@ variable "plugin_daemon_key" {
 }
 
 variable "plugin_dify_inner_api_key" {
-  type    = string
-  default = null
-}
-
-variable "dify_plugin_daemon_version" {
   type    = string
   default = null
 }

@@ -62,10 +62,6 @@ variable "plugin_dify_inner_api_key" {
   type = string
 }
 
-variable "dify_plugin_daemon_version" {
-  type = string
-}
-
 variable "db_database" {
   type = string
 }

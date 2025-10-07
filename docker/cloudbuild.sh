@@ -15,7 +15,7 @@ DIFY_PLUGIN_DAEMON_VERSION=${4:-"${DIFY_VERSION}"}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "Submitting Cloud Build jobs with Dify version '${DIFY_VERSION}'" >&2
-echo "Submitting Cloud Build jobs with Dify Plugin Daemon version '${DIFY_PLUGIN_DAEMON_VERSION}'" >&2
+echo "(The same tag is used for the API, Sandbox, and Plugin Daemon images.)" >&2
 
 # Nginx Build and Push
 pushd "${SCRIPT_DIR}/nginx" >/dev/null
@@ -34,5 +34,5 @@ popd >/dev/null
 
 # Plugin Daemon Build and Push
 pushd "${SCRIPT_DIR}/dify-plugin-daemon" >/dev/null
-gcloud builds submit --config=cloudbuild.yaml --substitutions=_REGION="$REGION",_PROJECT_ID="$PROJECT_ID",_DIFY_PLUGIN_DAEMON_VERSION="$DIFY_PLUGIN_DAEMON_VERSION"
+gcloud builds submit --config=cloudbuild.yaml --substitutions=_REGION="$REGION",_PROJECT_ID="$PROJECT_ID",_DIFY_VERSION="$DIFY_VERSION"
 popd >/dev/null
