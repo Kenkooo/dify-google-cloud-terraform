@@ -3,13 +3,14 @@
 set -euo pipefail
 
 if [[ $# -lt 2 ]]; then
-  echo "Usage: $0 <project-id> <region> [dify-version]" >&2
+  echo "Usage: $0 <project-id> <region> [dify-version] [dify-plugin-daemon-version]" >&2
   exit 1
 fi
 
 PROJECT_ID=$1
 REGION=$2
 DIFY_VERSION=${3:-"latest"}
+DIFY_PLUGIN_DAEMON_VERSION=${4:-"${DIFY_VERSION}"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
